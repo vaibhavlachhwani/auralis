@@ -21,8 +21,6 @@ public class PacketIngestHandler extends TextWebSocketHandler {
         ObjectMapper objectMapper = new ObjectMapper();
         PacketMetrics packetMetrics = objectMapper.readValue(packetMetricsJsonString, PacketMetrics.class);
 
-//        System.out.println(packetMetrics);
-//        System.out.println("===============================================================================");
         aggregator.processPacket(packetMetrics);
 
         TextMessage response = new TextMessage("Server ACK");
