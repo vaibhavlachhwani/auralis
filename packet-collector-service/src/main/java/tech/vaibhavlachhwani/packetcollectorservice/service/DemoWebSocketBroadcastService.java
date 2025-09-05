@@ -11,7 +11,7 @@ public class DemoWebSocketBroadcastService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public void broadcast(DashboardData data) {
-        messagingTemplate.convertAndSend("/topic/demo", data.getBandwidthMbps());
-        System.out.println("Sending... " + data.getBandwidthMbps());
+        messagingTemplate.convertAndSend("/topic/data", data);
+        System.out.println("Sending data");
     }
 }
