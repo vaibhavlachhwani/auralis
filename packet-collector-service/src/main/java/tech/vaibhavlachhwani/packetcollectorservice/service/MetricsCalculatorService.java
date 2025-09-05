@@ -16,6 +16,7 @@ public class MetricsCalculatorService {
     private static final int TOP_N_COUNT = 5;
 
     private final RealTimeMetricsAggregator aggregator;
+    private final DemoWebSocketBroadcastService broadcastService;
 
     @Scheduled(fixedRate = (long) WINDOW_DURATION_SECONDS * 1000)
     public void calculateAndBroadcastMetrics() {
@@ -70,5 +71,6 @@ public class MetricsCalculatorService {
 
         System.out.println(dashboardData);
         System.out.println("****************************************************************************************************************");
+        broadcastService.broadcast(dashboardData);
     }
 }
