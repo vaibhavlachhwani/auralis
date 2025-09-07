@@ -32,10 +32,6 @@ export const useDashboardData = () => {
       onDisconnect: () => {
         setIsConnected(false);
       },
-
-      debug: (str) => {
-        // console.info(Date.now(), str);
-      },
     });
 
     client.activate();
