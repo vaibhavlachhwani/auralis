@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { SiteHeader } from "./SiteHeader";
+import { SiteHeader } from "./site-header/SiteHeader";
 
 export function Test() {
   const { dashboardData, connectionStatus } = useDashboardData();

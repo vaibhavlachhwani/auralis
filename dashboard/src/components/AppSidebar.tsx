@@ -3,6 +3,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -22,7 +23,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <div>
-                <ChartNoAxesCombined></ChartNoAxesCombined>
+                <ChartNoAxesCombined />
                 <span className="text-base font-semibold">Auralis</span>
               </div>
             </SidebarMenuButton>
@@ -57,9 +58,11 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+      </SidebarContent>
 
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupContent className="flex flex-col gap-2">
+      <SidebarFooter className="">
+        <SidebarGroup>
+          <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton tooltip="About Auralis">
@@ -77,11 +80,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      </SidebarContent>
-
-      {/* <SidebarFooter className="">
-        <p>Sidebar footer</p>
-      </SidebarFooter> */}
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
