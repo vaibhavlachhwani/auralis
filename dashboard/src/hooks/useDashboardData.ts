@@ -2,18 +2,9 @@ import { DATA_TOPIC, SOCKET_URL } from "@/config";
 import { Client } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 
-const ConnectionStatus = {
-  CONNECTING: "Connecting...",
-  OPEN: "Open",
-  CLOSED: "Closed",
-  ERROR: "Error!",
-};
-
 export const useDashboardData = () => {
   const [dashboardData, setDashboardData] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState(
-    ConnectionStatus.CONNECTING
-  );
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const client = new Client({
@@ -21,7 +12,7 @@ export const useDashboardData = () => {
       reconnectDelay: 5000,
 
       onConnect: () => {
-        setConnectionStatus(ConnectionStatus.OPEN);
+        setIsConnected(true);
 
         client.subscribe(DATA_TOPIC, (message) => {
           try {
@@ -34,16 +25,16 @@ export const useDashboardData = () => {
       },
 
       onStompError: (frame) => {
-        setConnectionStatus(ConnectionStatus.ERROR);
+        setIsConnected(false);
         console.error("Error occured : ", frame.body);
       },
 
       onDisconnect: () => {
-        setConnectionStatus(ConnectionStatus.CLOSED);
+        setIsConnected(false);
       },
 
       debug: (str) => {
-        console.info(Date.now(), str);
+        // console.info(Date.now(), str);
       },
     });
 
@@ -54,5 +45,5 @@ export const useDashboardData = () => {
     };
   }, []);
 
-  return { dashboardData, connectionStatus };
+  return { dashboardData, isConnected };
 };
