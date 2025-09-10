@@ -18,7 +18,7 @@ public class MetricsCalculatorService {
     private final RealTimeMetricsAggregator aggregator;
     private final DemoWebSocketBroadcastService broadcastService;
 
-    @Scheduled(fixedRate = (long) WINDOW_DURATION_SECONDS * 1000)
+    @Scheduled(fixedRate = (long) (WINDOW_DURATION_SECONDS * 1000))
     public void calculateAndBroadcastMetrics() {
         AggregatedData snapshot = aggregator.snapshotAndReset();
 
