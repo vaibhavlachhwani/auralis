@@ -1,5 +1,5 @@
 import { KpiCard } from "./KpiCard";
-import { type DashboardData } from "@/types"; // Import your central types
+import { type DashboardData } from "@/types";
 import { usePrevious } from "@/hooks/usePrevious";
 import { formatBitsPerSecond } from "@/utils/formatters";
 
@@ -7,38 +7,34 @@ type KpiCardsSectionProps = {
   data: DashboardData;
 };
 
-// Helper function to calculate the percentage change safely
 const calculateChange = (current: number, previous?: number): number => {
   if (previous === undefined || previous === null || previous === 0) {
-    return 0; // Can't calculate change if previous is zero or doesn't exist
+    return 0;
   }
   return ((current - previous) / previous) * 100;
 };
 
 export function KpiCardsSection({ data }: KpiCardsSectionProps) {
-  // Use our custom hook to get the data from the last render
   const previousData = usePrevious(data);
 
-  // Calculate the change for each metric
   const bandwidthChange = calculateChange(
     data.bandwidthMbps,
     previousData?.bandwidthMbps
   );
+
   const ppsChange = calculateChange(
     data.packetsPerSecond,
     previousData?.packetsPerSecond
   );
+
   const avgPacketSizeChange = calculateChange(
     data.averagePacketSizeBytes,
     previousData?.averagePacketSizeBytes
   );
+
   const newConnsChange = calculateChange(
     data.newConnectionsPerSecond,
     previousData?.newConnectionsPerSecond
-  );
-  const resetConnsChange = calculateChange(
-    data.resetsPerSecond,
-    previousData?.resetsPerSecond
   );
 
   return (
