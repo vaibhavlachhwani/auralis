@@ -12,7 +12,7 @@ type ProtocolData = Record<string, number>;
 
 type ChartAreaProps = {
   currentBandwidth: number;
-  protocolData: ProtocolData;
+  protocolData: ProtocolData | null;
 };
 
 export function ChartArea({ currentBandwidth, protocolData }: ChartAreaProps) {
@@ -26,7 +26,9 @@ export function ChartArea({ currentBandwidth, protocolData }: ChartAreaProps) {
               <span className="hidden @[540px]/card:block">
                 Live network throughput
               </span>
-              <span className="@[540px]/card:hidden">Last 3 months</span>
+              <span className="@[540px]/card:hidden">
+                Live network throughput
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-4 h-[250px] flex">
@@ -40,9 +42,11 @@ export function ChartArea({ currentBandwidth, protocolData }: ChartAreaProps) {
             <CardTitle>Protocol Distribution</CardTitle>
             <CardDescription>
               <span className="hidden @[540px]/card:block">
-                Live network throughput
+                Live traffic breakdown by protocol
               </span>
-              <span className="@[540px]/card:hidden">Last 3 months</span>
+              <span className="@[540px]/card:hidden">
+                Live traffic breakdown by protocol
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-4 h-[250px] flex">

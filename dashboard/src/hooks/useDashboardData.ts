@@ -1,9 +1,12 @@
 import { DATA_TOPIC, SOCKET_URL } from "@/config";
+import type { DashboardData } from "@/types";
 import { Client } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 
 export const useDashboardData = () => {
-  const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null
+  );
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {

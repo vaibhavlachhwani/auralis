@@ -8,8 +8,7 @@ import {
   type ChartConfig,
 } from "../ui/chart";
 import { Pie, PieChart } from "recharts";
-
-type ProtocolData = Record<string, number>; // e.g., { "TCP": 78852, "UDP": 10286 }
+import type { ProtocolData } from "@/types";
 
 type ProtocolDistributionChartProps = {
   protocolData: ProtocolData | null;
