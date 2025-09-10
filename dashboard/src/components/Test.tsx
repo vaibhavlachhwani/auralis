@@ -9,7 +9,7 @@ import {
 import { SiteHeader } from "./site-header/SiteHeader";
 
 export function Test() {
-  const { dashboardData, connectionStatus } = useDashboardData();
+  const { dashboardData, isConnected } = useDashboardData();
   const data = JSON.stringify(dashboardData);
 
   return (
@@ -22,7 +22,9 @@ export function Test() {
           <Card className="w-full max-w-lg">
             <CardHeader>
               <CardTitle>Incoming WS DashboardData</CardTitle>
-              <CardDescription>{connectionStatus}</CardDescription>
+              <CardDescription>
+                {isConnected ? "Connected" : "Connecting..."}
+              </CardDescription>
             </CardHeader>
 
             <CardContent>

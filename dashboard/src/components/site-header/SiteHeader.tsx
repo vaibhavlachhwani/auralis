@@ -1,4 +1,4 @@
-import { Separator } from "@radix-ui/react-separator";
+import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
 import { ThemePicker } from "./ThemePicker";
 

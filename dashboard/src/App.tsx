@@ -1,11 +1,11 @@
-import { Test } from "./components/Test";
 import MainLayout from "./layout/MainLayout";
+import { OverviewPage } from "./pages/OverviewPage";
 
 function App() {
   return (
     <>
       <MainLayout>
-        <Test />
+        <OverviewPage />
       </MainLayout>
     </>
   );
