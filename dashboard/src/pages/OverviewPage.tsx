@@ -2,6 +2,7 @@ import { BarArea } from "@/components/BarArea";
 import { ChartArea } from "@/components/ChartArea";
 import { KpiCardsSection } from "@/components/KpiCardsSection";
 import { SiteHeader } from "@/components/site-header/SiteHeader";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { useDashboardData } from "@/hooks/useDashboardData";
 
 export function OverviewPage() {
@@ -10,7 +11,13 @@ export function OverviewPage() {
   if (!dashboardData || !isConnected) {
     return (
       <>
-        <p>Loading...</p>
+        <header>
+          <SiteHeader title="Overview" />
+        </header>
+        <div className="flex flex-col h-full justify-center items-center">
+          <Spinner size={64} variant="infinite" />
+          <h2>Establishing connection...</h2>
+        </div>
       </>
     );
   }
