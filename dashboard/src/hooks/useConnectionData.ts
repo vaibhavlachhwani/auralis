@@ -1,12 +1,10 @@
-import { DASHBOARD_TOPIC, SOCKET_URL } from "@/config";
-import type { DashboardData } from "@/types";
+import { CONNECTION_TOPIC, SOCKET_URL } from "@/config";
+import type { ConnectionData } from "@/types";
 import { Client } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 
-export const useDashboardData = () => {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
-    null
-  );
+export const useConnectionData = () => {
+  const [connectionData, setConnectionData] = useState<ConnectionData[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -17,10 +15,10 @@ export const useDashboardData = () => {
       onConnect: () => {
         setIsConnected(true);
 
-        client.subscribe(DASHBOARD_TOPIC, (message) => {
+        client.subscribe(CONNECTION_TOPIC, (message) => {
           try {
             const payload = JSON.parse(message.body);
-            setDashboardData(payload);
+            setConnectionData(payload);
           } catch (error) {
             console.error(Date.now(), "Error parsing message body : ", error);
           }
@@ -44,21 +42,5 @@ export const useDashboardData = () => {
     };
   }, []);
 
-  const nullDashboardData = {
-    bandwidthMbps: 0.0,
-    packetsPerSecond: 0.0,
-    averagePacketSizeBytes: 0.0,
-    newConnectionsPerSecond: 0.0,
-    resetsPerSecond: 0.0,
-    protocolDistribution: {},
-    topTalkers: [],
-    topDestinations: [],
-    topServices: [],
-  };
-
-  if (JSON.stringify(dashboardData) === JSON.stringify(nullDashboardData)) {
-    setDashboardData(null);
-  }
-
-  return { dashboardData, isConnected };
+  return { connectionData, isConnected };
 };

@@ -21,3 +21,13 @@ export type DashboardData = {
   topDestinations: IpTraffic[] | null;
   topServices: PortTraffic[] | null;
 };
+
+export type ConnectionData = {
+  connectionId: string | null;
+  sourceIp: string | null;
+  sourcePort: number;
+  destinationIp: string | null;
+  destinationPort: number;
+  protocol: string | null;
+  bytes: number;
+};
