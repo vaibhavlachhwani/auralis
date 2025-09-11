@@ -113,6 +113,7 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     className="w-full justify-start"
                     variant="default"
+                    tooltip={"Built by Vaibhav Lachhwani"}
                   >
                     <VaibhavLogo isDark={true} width={20} height={20} />
                     <span>Vaibhav Lachhwani</span>
