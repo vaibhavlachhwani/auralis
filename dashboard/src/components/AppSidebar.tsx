@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Cable, ChartNoAxesCombined, Gauge, History, Info } from "lucide-react";
 import { VaibhavLogo } from "./logo/VaibhavLogo";
+import { NavLink } from "react-router-dom";
 
 export function AppSidebar() {
   return (
@@ -36,24 +37,48 @@ export function AppSidebar() {
           <SidebarGroupContent className="flex flex-col gap-2">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Overview">
-                  <Gauge />
-                  <span>Overview</span>
-                </SidebarMenuButton>
+                <NavLink to="/">
+                  {({ isActive }) => (
+                    <SidebarMenuButton
+                      className="w-full justify-start"
+                      variant={isActive ? "outline" : null}
+                      tooltip={"Overview"}
+                    >
+                      <Gauge />
+                      <span>Overview</span>
+                    </SidebarMenuButton>
+                  )}
+                </NavLink>
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Connections">
-                  <Cable />
-                  <span>Connections</span>
-                </SidebarMenuButton>
+                <NavLink to="/connections">
+                  {({ isActive }) => (
+                    <SidebarMenuButton
+                      className="w-full justify-start"
+                      variant={isActive ? "outline" : null}
+                      tooltip={"Connections"}
+                    >
+                      <Cable />
+                      <span>Connections</span>
+                    </SidebarMenuButton>
+                  )}
+                </NavLink>
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="History">
-                  <History />
-                  <span>History</span>
-                </SidebarMenuButton>
+                <NavLink to="/history">
+                  {({ isActive }) => (
+                    <SidebarMenuButton
+                      className="w-full justify-start"
+                      variant={isActive ? "outline" : null}
+                      tooltip={"History"}
+                    >
+                      <History />
+                      <span>History</span>
+                    </SidebarMenuButton>
+                  )}
+                </NavLink>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -65,17 +90,34 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="About Auralis">
-                  <Info />
-                  <span>About Auralis</span>
-                </SidebarMenuButton>
+                <NavLink to="/about">
+                  {({ isActive }) => (
+                    <SidebarMenuButton
+                      className="w-full justify-start"
+                      variant={isActive ? "outline" : null}
+                      tooltip={"About Auralis"}
+                    >
+                      <Info />
+                      <span>About Auralis</span>
+                    </SidebarMenuButton>
+                  )}
+                </NavLink>
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Built by Vaibhav Lachhwani">
-                  <VaibhavLogo isDark width={20} height={20} />
-                  <span>Built by Vaibhav Lachhwani</span>
-                </SidebarMenuButton>
+                <a
+                  href="https://www.vaibhavlachhwani.tech" // Replace with your actual URL
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SidebarMenuButton
+                    className="w-full justify-start"
+                    variant="default"
+                  >
+                    <VaibhavLogo isDark={true} width={20} height={20} />
+                    <span>Vaibhav Lachhwani</span>
+                  </SidebarMenuButton>
+                </a>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
