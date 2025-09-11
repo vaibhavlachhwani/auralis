@@ -1,4 +1,4 @@
-import { DATA_TOPIC, SOCKET_URL } from "@/config";
+import { DASHBOARD_TOPIC, SOCKET_URL } from "@/config";
 import type { DashboardData } from "@/types";
 import { Client } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ export const useDashboardData = () => {
       onConnect: () => {
         setIsConnected(true);
 
-        client.subscribe(DATA_TOPIC, (message) => {
+        client.subscribe(DASHBOARD_TOPIC, (message) => {
           try {
             const payload = JSON.parse(message.body);
             setDashboardData(payload);
