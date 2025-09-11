@@ -21,4 +21,6 @@ public class AggregatedData {
     private Map<String, Long> bytesBySourceIp;
     private Map<String, Long> bytesByDestinationIp;
     private Map<Integer, Long> bytesPerDestinationPort;
+
+    private Map<String, Long> bytesPerConnection;
 }

@@ -31,6 +31,9 @@ public class RealTimeMetricsAggregator {
     // Top Services
     private ConcurrentHashMap<Integer, AtomicLong> bytesPerDestinationPort = new ConcurrentHashMap<>();
 
+    //Connection info
+    private ConcurrentHashMap<String, AtomicLong> bytesPerConnection = new ConcurrentHashMap<>();
+
     public void processPacket(PacketMetrics packetMetrics) {
         totalBytes.addAndGet(packetMetrics.getPacketLength());
         totalPackets.incrementAndGet();
@@ -68,6 +71,22 @@ public class RealTimeMetricsAggregator {
             bytesPerDestinationPort.computeIfAbsent(packetMetrics.getDestinationPort(), k -> new AtomicLong(0))
                     .addAndGet(packetMetrics.getPacketLength());
         }
+
+        if (packetMetrics.getSourceIp() != null && packetMetrics.getSourcePort() != null &&
+                packetMetrics.getDestinationIp() != null && packetMetrics.getDestinationPort() != null &&
+                packetMetrics.getProtocol() != null) {
+
+            String connectionId = createConnectionId(
+                    packetMetrics.getSourceIp(),
+                    packetMetrics.getSourcePort(),
+                    packetMetrics.getDestinationIp(),
+                    packetMetrics.getDestinationPort(),
+                    packetMetrics.getProtocol()
+            );
+
+            bytesPerConnection.computeIfAbsent(connectionId, k -> new AtomicLong(0))
+                    .addAndGet(packetMetrics.getPacketLength());
+        }
     }
 
     public synchronized AggregatedData snapshotAndReset() {
@@ -82,6 +101,9 @@ public class RealTimeMetricsAggregator {
 
         Map<Integer, AtomicLong> oldBytesPerDestinationPort = bytesPerDestinationPort;
         bytesPerDestinationPort = new ConcurrentHashMap<>();
+
+        Map<String, AtomicLong> oldBytesPerConnection = bytesPerConnection;
+        bytesPerConnection = new ConcurrentHashMap<>();
 
         return AggregatedData.builder()
                 .totalBytes(totalBytes.getAndSet(0))
@@ -104,6 +126,18 @@ public class RealTimeMetricsAggregator {
                         oldBytesPerDestinationPort.entrySet().stream()
                                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()))
                 )
+                .bytesPerConnection(
+                        oldBytesPerConnection.entrySet().stream()
+                                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()))
+                )
                 .build();
+    }
+
+    private String createConnectionId(String sip, int sp, String dip, int dp, String proto) {
+        if (sip.compareTo(dip) > 0 || (sip.equals(dip) && sp > dp)) {
+            return dip + ":" + dp + "-" + sip + ":" + sp + "-" + proto;
+        }
+
+        return sip + ":" + sp + "-" + dip + ":" + dp + "-" + proto;
     }
 }

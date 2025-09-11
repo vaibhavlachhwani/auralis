@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import tech.vaibhavlachhwani.packetcollectorservice.dto.ConnectionData;
 import tech.vaibhavlachhwani.packetcollectorservice.dto.DashboardData;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class WebSocketBroadcastService {
@@ -15,7 +17,7 @@ public class WebSocketBroadcastService {
         messagingTemplate.convertAndSend("/topic/dashboard", data);
     }
 
-    public void broadcastConnectionData(ConnectionData data) {
-        messagingTemplate.convertAndSend("/topic/connection", data);
+    public void broadcastConnectionData(List<ConnectionData> connections) {
+        messagingTemplate.convertAndSend("/topic/connection", connections);
     }
 }
