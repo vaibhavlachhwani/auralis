@@ -105,6 +105,7 @@ public class MetricsCalculatorService {
             String destinationIp = destParts[0];
             int destinationPort = Integer.parseInt(destParts[1]);
             String protocol = parts[2];
+            double speedMbps = (bytes * 8.0) / (WINDOW_DURATION_SECONDS * 1_000_000);
 
             return ConnectionData
                     .builder()
@@ -115,6 +116,7 @@ public class MetricsCalculatorService {
                     .destinationPort(destinationPort)
                     .protocol(protocol)
                     .bytes(bytes)
+                    .speedMbps(speedMbps)
                     .build();
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {

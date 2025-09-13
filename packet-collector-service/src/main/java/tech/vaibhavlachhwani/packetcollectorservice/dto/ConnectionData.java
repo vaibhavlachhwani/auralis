@@ -17,4 +17,5 @@ public class ConnectionData {
     private int destinationPort;
     private String protocol;
     private long bytes;
+    private double speedMbps;
 }
