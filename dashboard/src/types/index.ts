@@ -30,4 +30,5 @@ export type ConnectionData = {
   destinationPort: number;
   protocol: string | null;
   bytes: number;
+  speedMbps: number;
 };
