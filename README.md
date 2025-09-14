@@ -1,105 +1,133 @@
 # Auralis - Real-Time Network Monitoring Dashboard
 
-Auralis is a web-based network monitoring tool that provides real-time insights into network traffic. It captures live packets, processes them, and displays aggregated metrics on a user-friendly dashboard.
+Auralis is a powerful and intuitive web-based network monitoring tool designed to provide real-time insights into your network traffic. It captures live data packets, processes them to extract key metrics, and presents them on a dynamic and user-friendly dashboard.
+
+## Key Features
+
+- **Real-Time Traffic Monitoring**: View live metrics such as bandwidth utilization, packets per second, and the number of active connections.
+- **In-Depth Traffic Analysis**: Identify top talkers, top destinations, and the most used services on your network.
+- **Interactive Dashboard**: A modern, responsive web interface with interactive charts and tables for easy data exploration.
+- **Protocol Distribution**: See a breakdown of network traffic by protocol (TCP, UDP, etc.).
+- **Connection Details**: View a detailed list of active network connections with information like source/destination IPs, ports, and data transferred.
 
 ## Architecture
 
-The application is composed of three main services:
+Auralis employs a microservices-based architecture designed for scalability and separation of concerns. The system consists of three primary services that communicate in a clear, unidirectional data flow.
 
 ```
-+--------------------------+      +----------------------------+      +-----------------+
-| network-capture-service  |      |  packet-collector-service  |      |    dashboard    |
-| (Python)                 |      |  (Java / Spring Boot)      |      | (React / Vite)  |
-+--------------------------+      +----------------------------+      +-----------------+
-           |                                  ^      |                         ^
-           | (1) Parsed Packets               |      | (2) Aggregated Data     |
-           | (WebSocket)                      |      | (WebSocket / STOMP)     |
-           v                                  |      v                         |
-+--------------------------+                  |                                |
-| Ingest WebSocket         |                  |                                |
-| (/ingest)                |                  |                                |
-+--------------------------+                  |                                |
-           |                                  |                                |
-           v                                  |                                |
-+--------------------------+                  |                                |
-| RealTimeMetricsAggregator|                  |                                |
-+--------------------------+                  |                                |
-           |                                  |                                |
-           v                                  |                                |
-+--------------------------+                  |                                |
-| MetricsCalculatorService |------------------+                                |
-| (Scheduled)              |                                                   |
-+--------------------------+                                                   |
+      ┌──────────────────────────────┐      ┌──────────────────────────────┐      ┌──────────────────────────┐
+      │  network-capture-service     │      │  packet-collector-service    │      │  dashboard               │
+      │  (Python)                    │      │  (Java / Spring Boot)        │      │  (React / Vite)          │
+      └──────────────────────────────┘      └──────────────────────────────┘      └──────────────────────────┘
+                 │                                      ▲      │                                ▲
+                 │ (1) Parsed Packets (JSON)            │      │ (2) Aggregated Metrics (JSON)  │
+                 │ via WebSocket                        │      │ via STOMP over WebSocket       │
+                 ▼                                      │      ▼                                │
+      ┌──────────────────────────────┐      ┌──────────────────────────────┐      ┌──────────────────────────┐
+      │  [Network Interface]         │      │  [Ingest Endpoint]           │      │  [WebSocket Client]      │
+      │         │                    │      │           │                  │      │           │              │
+      │      tshark process          │      │        Aggregator            │      │        UI Components     │
+      │         │                    │      │           │                  │      │           │              │
+      │      pyshark wrapper         │      │        Calculator            │      │        Charts & Tables   │
+      │         │                    │      │           │                  │      │                          │
+      │      WebSocket Client        │      │        Broadcaster           │      │                          │
+      └──────────────────────────────┘      └──────────────────────────────┘      └──────────────────────────┘
 ```
 
-1.  **`network-capture-service`**: Captures raw packets, parses them, and sends them to the `packet-collector-service` via a WebSocket.
-2.  **`packet-collector-service`**: Ingests the packet data, aggregates it in real-time, and broadcasts the metrics to the dashboard via a STOMP-enabled WebSocket.
-3.  **`dashboard`**: A React-based frontend that visualizes the real-time network data.
+### Data Flow
 
-## Features
+1.  **Packet Capture and Forwarding**:
+    -   The **`network-capture-service`** listens on a network interface using `tshark`.
+    -   Raw packets are parsed by `pyshark` to extract key information (IPs, ports, protocols, etc.).
+    -   This data is serialized to JSON and sent to the `packet-collector-service` via a WebSocket connection to the `/ingest` endpoint.
 
-*   Real-time monitoring of network traffic.
-*   Key metrics like bandwidth usage, packets per second, and active connections.
-*   Top talkers, top destinations, and top services identification.
-*   A web-based dashboard with interactive charts and tables.
+2.  **Data Aggregation and Broadcasting**:
+    -   The **`packet-collector-service`** receives the JSON data and aggregates it in real-time.
+    -   A scheduled service calculates metrics like bandwidth, top talkers, and protocol distribution.
+    -   The aggregated metrics are then broadcasted as JSON payloads to all subscribed clients on a STOMP-enabled WebSocket topic (`/topic/metrics`).
+
+3.  **Real-Time Visualization**:
+    -   The **`dashboard`** establishes a WebSocket connection to the `packet-collector-service`.
+    -   It subscribes to the STOMP topics to receive the aggregated metrics.
+    -   The UI, built with React, dynamically updates to display the incoming data in charts and tables, providing a real-time view of the network activity.
+
+For a more detailed look at the internal architecture of each service, please refer to the `README.md` file in its respective directory.
 
 ## Technologies Used
 
-*   **Frontend:**
-    *   React
-    *   Vite
-    *   TypeScript
-    *   Tailwind CSS
-    *   Recharts
-    *   Shadcn/ui
-*   **Backend:**
-    *   Java
-    *   Spring Boot
-    *   WebSocket (STOMP)
-*   **Packet Capture:**
-    *   Python
-    *   Pyshark
-    *   WebSockets
+-   **Frontend (`dashboard`)**:
+    -   React
+    -   Vite
+    -   TypeScript
+    -   Tailwind CSS
+    -   Recharts for charting
+    -   Shadcn/ui for UI components
+
+-   **Backend (`packet-collector-service`)**:
+    -   Java (JDK 21)
+    -   Spring Boot 3
+    -   Spring WebSocket (with STOMP)
+    -   Maven for dependency management
+
+-   **Packet Capture (`network-capture-service`)**:
+    -   Python 3
+    -   `pyshark` for packet sniffing and parsing
+    -   `websockets` for client-side WebSocket communication
 
 ## Getting Started
 
 ### Prerequisites
 
-*   Java 21+
-*   Maven
-*   Python 3
-*   Node.js and npm
+To run Auralis, you will need the following installed on your system:
+
+-   **Java**: Version 21 or higher
+-   **Maven**: For building and running the `packet-collector-service`
+-   **Python**: Version 3.x
+-   **Node.js**: For managing the `dashboard` dependencies and running the development server
+-   **`tshark`**: The command-line utility for `Wireshark`. The `network-capture-service` depends on it for packet capture. You can install it via your system's package manager (e.g., `sudo apt-get install tshark` on Debian/Ubuntu).
 
 ### Running the Application
 
-1.  **Start the `packet-collector-service`:**
+Follow these steps to get all the services up and running:
+
+1.  **Start the `packet-collector-service`**:
+    Open a terminal, navigate to the `packet-collector-service` directory, and run the service using Maven:
     ```bash
     cd packet-collector-service
     mvn spring-boot:run
     ```
-    The service will start on port 8080.
+    This will start the backend service on port `8080`.
 
-2.  **Start the `network-capture-service`:**
+2.  **Start the `network-capture-service`**:
+    In a new terminal, navigate to the `network-capture-service` directory. You may need to create a `requirements.txt` file and install the dependencies first.
     ```bash
     cd network-capture-service
+    # Create requirements.txt if it doesn't exist
+    # echo "pyshark" > requirements.txt
+    # echo "websockets" >> requirements.txt
     pip install -r requirements.txt
     sudo python capture.py
     ```
-    Note: `sudo` is required to capture network packets.
+    **Note**: Running this script with `sudo` is necessary as packet capture requires elevated privileges.
 
-3.  **Start the `dashboard`:**
+3.  **Start the `dashboard`**:
+    Finally, in a third terminal, navigate to the `dashboard` directory, install the Node.js dependencies, and start the development server:
     ```bash
     cd dashboard
     npm install
     npm run dev
     ```
-    The dashboard will be available at `http://localhost:5173`.
+    The dashboard will now be accessible in your web browser at `http://localhost:5173`.
 
 ## Project Structure
 
+The repository is organized into three main directories, each containing one of the core services:
+
 ```
 .
-├── dashboard/                  # React frontend
-├── network-capture-service/    # Python packet capture service
-└── packet-collector-service/   # Java/Spring Boot backend
+├── dashboard/                  # Contains the React-based frontend application
+├── network-capture-service/    # The Python service for capturing and parsing network packets
+└── packet-collector-service/   # The Java/Spring Boot backend for data aggregation and broadcasting
 ```
+
+For more detailed information about each service, please refer to the `README.md` file within its respective directory.
