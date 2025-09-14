@@ -66,20 +66,7 @@ export function AppSidebar() {
                 </NavLink>
               </SidebarMenuItem>
 
-              <SidebarMenuItem>
-                <NavLink to="/history">
-                  {({ isActive }) => (
-                    <SidebarMenuButton
-                      className="w-full justify-start"
-                      variant={isActive ? "outline" : null}
-                      tooltip={"History"}
-                    >
-                      <History />
-                      <span>History</span>
-                    </SidebarMenuButton>
-                  )}
-                </NavLink>
-              </SidebarMenuItem>
+              
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
