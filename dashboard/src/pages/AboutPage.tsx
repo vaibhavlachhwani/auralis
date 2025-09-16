@@ -2,7 +2,6 @@ import { SiteHeader } from "@/components/site-header/SiteHeader";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
