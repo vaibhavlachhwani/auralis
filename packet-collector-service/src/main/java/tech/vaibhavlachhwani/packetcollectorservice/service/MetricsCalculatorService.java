@@ -20,6 +20,7 @@ public class MetricsCalculatorService {
 
     private final RealTimeMetricsAggregator aggregator;
     private final WebSocketBroadcastService broadcastService;
+    private final MetricsPersistenceService persistenceService;
 
     @Scheduled(fixedRate = (long) (WINDOW_DURATION_SECONDS * 1000))
     public void calculateAndBroadcastMetrics() {
@@ -72,6 +73,7 @@ public class MetricsCalculatorService {
                 .topServices(topServices)
                 .build();
 
+        persistenceService.save(dashboardData);
         broadcastService.broadcastDashboardData(dashboardData);
         log.info("Broadcasting DashboardData...");
 
