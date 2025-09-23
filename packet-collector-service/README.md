@@ -1,27 +1,29 @@
 # Packet Collector Service
 
+![Auralis Logo](./docs/auralis-logo.svg)
+
 This service is the central hub of the Auralis network monitoring system. It is a backend application built with Java and the Spring Boot framework. Its primary responsibilities are to ingest parsed packet data, aggregate it in real-time to compute key performance metrics, and broadcast these metrics to the dashboard for visualization.
 
 ## Functionality
 
-- **Data Ingestion**: Exposes a WebSocket endpoint (`/ingest`) to receive parsed packet data from the `network-capture-service`.
-- **Real-Time Aggregation**: Processes the incoming stream of packet data, aggregating it in memory to calculate metrics such as bandwidth usage, packets per second, protocol distribution, and top talkers.
-- **Metrics Broadcasting**: Periodically sends the aggregated metrics to all connected dashboard clients via a STOMP-enabled WebSocket endpoint (`/topic/metrics`).
-- **Connection Tracking**: Maintains a list of active network connections, which is also sent to the dashboard.
+-   **Data Ingestion**: Exposes a WebSocket endpoint (`/ingest`) to receive parsed packet data from the `network-capture-service`.
+-   **Real-Time Aggregation**: Processes the incoming stream of packet data, aggregating it in memory to calculate metrics such as bandwidth usage, packets per second, protocol distribution, and top talkers.
+-   **Metrics Broadcasting**: Periodically sends the aggregated metrics to all connected dashboard clients via a STOMP-enabled WebSocket endpoint (`/topic/metrics`).
+-   **Connection Tracking**: Maintains a list of active network connections, which is also sent to the dashboard.
 
 ## Technologies Used
 
-- **Framework**: [Spring Boot 3](https://spring.io/projects/spring-boot)
-- **Language**: [Java 21](https://www.oracle.com/java/)
-- **Build Tool**: [Apache Maven](https://maven.apache.org/)
-- **WebSockets**: [Spring WebSocket](https://docs.spring.io/spring-framework/reference/web/websocket.html) with [STOMP](https://stomp.github.io/) for messaging.
+-   **Framework**: [Spring Boot 3](https://spring.io/projects/spring-boot)
+-   **Language**: [Java 21](https://www.oracle.com/java/)
+-   **Build Tool**: [Apache Maven](https://maven.apache.org/)
+-   **WebSockets**: [Spring WebSocket](https://docs.spring.io/spring-framework/reference/web/websocket.html) with [STOMP](https://stomp.github.io/) for messaging.
 
 ## Getting Started
 
 ### Prerequisites
 
-- **Java Development Kit (JDK)**: Version 21 or higher.
-- **Apache Maven**: For compiling the project and managing dependencies.
+-   **Java Development Kit (JDK)**: Version 21 or higher.
+-   **Apache Maven**: For compiling the project and managing dependencies.
 
 ### Installation and Running
 
@@ -37,64 +39,7 @@ This service is the central hub of the Auralis network monitoring system. It is 
 
     This command will compile the project, download the necessary dependencies, and start the application. By default, the service will run on port `8080`.
 
-## Architecture
-
-The service is built around a reactive, event-driven architecture. It uses two distinct WebSocket endpoints: one for ingesting data and another for broadcasting results. The core logic is centered around a real-time aggregator and a scheduled calculator.
-
-```
-   ┌──────────────────────────┐
-   │ network-capture-service  │
-   └──────────────────────────┘
-              │
-              │ (1) Parsed Packets (JSON)
-              │ via WebSocket
-              ▼
-   ┌──────────────────────────┐
-   │ IngestWebSocketConfig    │
-   │ (Defines /ingest endpoint)│
-   └──────────────────────────┘
-              │
-              │
-              ▼
-   ┌──────────────────────────┐
-   │ PacketIngestHandler      │
-   └──────────────────────────┘
-              │
-              │ (2) Raw PacketMetrics DTO
-              ▼
-   ┌──────────────────────────┐
-   │ RealTimeMetricsAggregator│
-   │ (Concurrent In-Memory Maps)│
-   └──────────────────────────┘
-              ▲
-              │ (4) Fetches and clears data
-              │
-   ┌──────────────────────────┐
-   │ MetricsCalculatorService │
-   │ (@Scheduled every second)│
-   └──────────────────────────┘
-              │
-              │ (5) AggregatedData DTO
-              ▼
-   ┌──────────────────────────┐
-   │ WebSocketBroadcastService│
-   └──────────────────────────┘
-              │
-              │ (6) Sends data to STOMP topics
-              ▼
-   ┌──────────────────────────┐
-   │ WebSocketConfig          │
-   │ (Defines /ws endpoint)   │
-   └──────────────────────────┘
-              │
-              │ (7) Broadcast to clients
-              ▼
-   ┌──────────────────────────┐
-   │ dashboard                │
-   └──────────────────────────┘
-```
-
-### Data Flow and Component Responsibilities
+## Data Flow and Component Responsibilities
 
 1.  **Ingestion**: The `network-capture-service` sends JSON payloads to the `/ingest` endpoint. This endpoint is configured in `IngestWebSocketConfig` and handled by `PacketIngestHandler`.
 

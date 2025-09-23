@@ -1,31 +1,33 @@
 # Dashboard - Auralis Frontend
 
+![Auralis Logo](./docs/auralis-logo.svg)
+
 This directory contains the source code for the Auralis dashboard, a modern and responsive web application built with React. It serves as the user interface for visualizing real-time network monitoring data provided by the Auralis backend services.
 
 ## Features
 
-- **Real-Time Data Visualization**: Connects to the `packet-collector-service` via WebSockets to display live network metrics.
-- **Interactive Charts**: Utilizes Recharts to render dynamic and interactive charts for bandwidth usage, protocol distribution, and more.
-- **Detailed Connection Information**: Displays a comprehensive table of active network connections, allowing for easy inspection of traffic.
-- **Responsive Design**: Built with Tailwind CSS, the dashboard is designed to work seamlessly across different screen sizes.
-- **Theming**: Includes a theme toggle for switching between light and dark modes.
+-   **Real-Time Data Visualization**: Connects to the `packet-collector-service` via WebSockets to display live network metrics.
+-   **Interactive Charts**: Utilizes Recharts to render dynamic and interactive charts for bandwidth usage, protocol distribution, and more.
+-   **Detailed Connection Information**: Displays a comprehensive table of active network connections, allowing for easy inspection of traffic.
+-   **Responsive Design**: Built with Tailwind CSS, the dashboard is designed to work seamlessly across different screen sizes.
+-   **Theming**: Includes a theme toggle for switching between light and dark modes.
 
 ## Technologies Used
 
-- **Framework**: [React](https://reactjs.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [Shadcn/ui](https://ui.shadcn.com/)
-- **Charting**: [Recharts](https://recharts.org/)
-- **WebSocket Communication**: [stompjs](https://stomp-js.github.io/)
+-   **Framework**: [React](https://reactjs.org/)
+-   **Build Tool**: [Vite](https://vitejs.dev/)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+-   **UI Components**: [Shadcn/ui](https://ui.shadcn.com/)
+-   **Charting**: [Recharts](https://recharts.org/)
+-   **WebSocket Communication**: [stompjs](https://stomp-js.github.io/)
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [npm](https://www.npmjs.com/) or a compatible package manager
+-   [Node.js](https://nodejs.org/) (v18 or higher recommended)
+-   [npm](https://www.npmjs.com/) or a compatible package manager
 
 ### Installation and Running
 
@@ -46,44 +48,7 @@ This directory contains the source code for the Auralis dashboard, a modern and 
 
     This will start the Vite development server, and the dashboard will be available at `http://localhost:5173` by default.
 
-## Architecture
-
-The dashboard is a single-page application (SPA) built with React and Vite. It follows a component-based architecture, where the UI is divided into a hierarchy of reusable components. The data flow is primarily unidirectional, with data being fetched from the WebSocket and passed down to child components as props.
-
-```
-                 ┌──────────────────────────┐
-                 │  WebSocket Connection    │
-                 │  (STOMP Client)          │
-                 └──────────────────────────┘
-                          │
-                          │ (Aggregated Metrics & Connections)
-                          ▼
-                 ┌──────────────────────────┐
-                 │  App.tsx (Main Component)│
-                 └──────────────────────────┘
-                          │
-          ┌───────────────┴───────────────┐
-          │                               │
-          ▼                               ▼
-┌──────────────────┐            ┌──────────────────┐
-│  OverviewPage    │            │  ConnectionsPage │
-└──────────────────┘            └──────────────────┘
-          │                               │
-┌─────────┴─────────┐                   │
-│                   │                   ▼
-▼                   ▼            ┌──────────────────┐
-┌──────────────────┐ ┌──────────────────┐ │  DataTable       │
-│ KpiCardsSection  │ │  ChartArea       │ │  (Connections)   │
-└──────────────────┘ └──────────────────┘ └──────────────────┘
-         │                   │
-         ▼                   ▼
-┌──────────────────┐ ┌──────────────────┐
-│ KpiCard          │ │  BandwidthChart  │
-│ (e.g., Bandwidth)│ │  TopTalkersChart │
-└──────────────────┘ └──────────────────┘
-```
-
-### Component Overview
+## Component Overview
 
 -   **`App.tsx`**: The root component of the application. It establishes the WebSocket connection and manages the routing between different pages.
 

@@ -1,34 +1,36 @@
 # Network Capture Service
 
+![Auralis Logo](./docs/auralis-logo.svg)
+
 This service is a core component of the Auralis network monitoring tool. It is responsible for capturing live network packets from a specified network interface, parsing them to extract essential information, and forwarding the data to the `packet-collector-service` for aggregation and analysis.
 
 ## Functionality
 
-- **Packet Capture**: Uses the `pyshark` library, a Python wrapper for `tshark`, to sniff network traffic in real-time.
-- **Packet Parsing**: Extracts key details from each packet, including source and destination IP addresses, ports, protocol, packet size, and TCP flags.
-- **Data Forwarding**: Serializes the parsed packet data into a JSON format and sends it to the `packet-collector-service` via a WebSocket connection.
+-   **Packet Capture**: Uses the `pyshark` library, a Python wrapper for `tshark`, to sniff network traffic in real-time.
+-   **Packet Parsing**: Extracts key details from each packet, including source and destination IP addresses, ports, protocol, packet size, and TCP flags.
+-   **Data Forwarding**: Serializes the parsed packet data into a JSON format and sends it to the `packet-collector-service` via a WebSocket connection.
 
 ## Technologies Used
 
-- **Language**: [Python 3](https://www.python.org/)
-- **Packet Sniffing/Parsing**: [`pyshark`](https://kiminewt.github.io/pyshark/)
-- **WebSocket Communication**: [`websockets`](https://websockets.readthedocs.io/en/stable/)
+-   **Language**: [Python 3](https://www.python.org/)
+-   **Packet Sniffing/Parsing**: [`pyshark`](https://kiminewt.github.io/pyshark/)
+-   **WebSocket Communication**: [`websockets`](https://websockets.readthedocs.io/en/stable/)
 
 ## Getting Started
 
 ### Prerequisites
 
-- **Python 3**: Ensure you have a modern version of Python 3 installed.
-- **`tshark`**: This service depends on `tshark`, the command-line interface for the Wireshark network analyzer. You must install it on your system before running the service.
+-   **Python 3**: Ensure you have a modern version of Python 3 installed.
+-   **`tshark`**: This service depends on `tshark`, the command-line interface for the Wireshark network analyzer. You must install it on your system before running the service.
 
-  - **On Debian/Ubuntu**:
-    ```bash
-    sudo apt-get update
-    sudo apt-get install tshark
-    ```
-    During the installation, you may be asked if non-superusers should be allowed to capture packets. For security reasons, it is recommended to select **No** and run the script with `sudo`.
+    -   **On Debian/Ubuntu**:
+        ```bash
+        sudo apt-get update
+        sudo apt-get install tshark
+        ```
+        During the installation, you may be asked if non-superusers should be allowed to capture packets. For security reasons, it is recommended to select **No** and run the script with `sudo`.
 
-  - **On other systems**: Please refer to the official [Wireshark documentation](https://www.wireshark.org/download.html) for installation instructions.
+    -   **On other systems**: Please refer to the official [Wireshark documentation](https://www.wireshark.org/download.html) for installation instructions.
 
 ### Installation and Running
 
@@ -55,62 +57,9 @@ This service is a core component of the Auralis network monitoring tool. It is r
 
     **Important**: You must run this script with `sudo` or as a user with sufficient privileges to capture network packets. This is because packet sniffing requires low-level access to the network interfaces.
 
-## Architecture
-
-The service operates in a simple, linear fashion. It captures packets, processes them, and sends them to a WebSocket server. The main logic is contained within the `capture.py` script.
-
-```
-      ┌──────────────────────────┐
-      │  Network Interface (e.g., eth0) │
-      └──────────────────────────┘
-                 │
-                 │ (Raw Packets)
-                 ▼
-      ┌──────────────────────────┐
-      │  tshark Process          │
-      └──────────────────────────┘
-                 │
-                 │ (Packet Data)
-                 ▼
-      ┌──────────────────────────┐
-      │  pyshark.LiveCapture     │
-      └──────────────────────────┘
-                 │
-                 │ (Packet Object)
-                 ▼
-      ┌──────────────────────────┐
-      │  packet_parser.py        │
-      │  (parse_packet)          │
-      └──────────────────────────┘
-                 │
-                 │ (Parsed JSON)
-                 ▼
-      ┌──────────────────────────┐
-      │  ws_exporter.py          │
-      │  (send_to_websocket)     │
-      └──────────────────────────┘
-                 │
-                 │ (WebSocket Message)
-                 ▼
-      ┌──────────────────────────┐
-      │  packet-collector-service│
-      │  (ws://localhost:8080/ingest) │
-      └──────────────────────────┘
-```
-
-### Data Flow
-
-1.  **Capture**: The `pyshark.LiveCapture` function starts a `tshark` process to sniff packets from the specified network interface.
-
-2.  **Parsing**: For each captured packet, the `parse_packet` function in `packet_parser.py` is called. This function extracts the relevant fields from the packet object and creates a Python dictionary.
-
-3.  **Serialization**: The dictionary is then serialized into a JSON string.
-
-4.  **Exporting**: The `send_to_websocket` function in `ws_exporter.py` sends the JSON string to the `packet-collector-service` via a WebSocket connection.
-
 ## Configuration
 
 The service can be configured by modifying the following files:
 
-- **`capture.py`**: You can change the network interface to be monitored by updating the `interface` variable in this script.
-- **`config.py`**: This file contains the WebSocket server URI to which the service sends data. By default, it is set to `ws://localhost:8080/ingest`. You can change this if your `packet-collector-service` is running on a different host or port.
+-   **`capture.py`**: You can change the network interface to be monitored by updating the `interface` variable in this script.
+-   **`config.py`**: This file contains the WebSocket server URI to which the service sends data. By default, it is set to `ws://localhost:8080/ingest`. You can change this if your `packet-collector-service` is running on a different host or port.

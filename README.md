@@ -1,40 +1,18 @@
 # Auralis - Real-Time Network Monitoring Dashboard
 
+![Auralis Logo](./docs/auralis-logo.svg)
+
 Auralis is a powerful and intuitive web-based network monitoring tool designed to provide real-time insights into your network traffic. It captures live data packets, processes them to extract key metrics, and presents them on a dynamic and user-friendly dashboard.
 
 ## Key Features
 
-- **Real-Time Traffic Monitoring**: View live metrics such as bandwidth utilization, packets per second, and the number of active connections.
-- **In-Depth Traffic Analysis**: Identify top talkers, top destinations, and the most used services on your network.
-- **Interactive Dashboard**: A modern, responsive web interface with interactive charts and tables for easy data exploration.
-- **Protocol Distribution**: See a breakdown of network traffic by protocol (TCP, UDP, etc.).
-- **Connection Details**: View a detailed list of active network connections with information like source/destination IPs, ports, and data transferred.
+-   **Real-Time Traffic Monitoring**: View live metrics such as bandwidth utilization, packets per second, and the number of active connections.
+-   **In-Depth Traffic Analysis**: Identify top talkers, top destinations, and the most used services on your network.
+-   **Interactive Dashboard**: A modern, responsive web interface with interactive charts and tables for easy data exploration.
+-   **Protocol Distribution**: See a breakdown of network traffic by protocol (TCP, UDP, etc.).
+-   **Connection Details**: View a detailed list of active network connections with information like source/destination IPs, ports, and data transferred.
 
-## Architecture
-
-Auralis employs a microservices-based architecture designed for scalability and separation of concerns. The system consists of three primary services that communicate in a clear, unidirectional data flow.
-
-```
-      ┌──────────────────────────────┐      ┌──────────────────────────────┐      ┌──────────────────────────┐
-      │  network-capture-service     │      │  packet-collector-service    │      │  dashboard               │
-      │  (Python)                    │      │  (Java / Spring Boot)        │      │  (React / Vite)          │
-      └──────────────────────────────┘      └──────────────────────────────┘      └──────────────────────────┘
-                 │                                      ▲      │                                ▲
-                 │ (1) Parsed Packets (JSON)            │      │ (2) Aggregated Metrics (JSON)  │
-                 │ via WebSocket                        │      │ via STOMP over WebSocket       │
-                 ▼                                      │      ▼                                │
-      ┌──────────────────────────────┐      ┌──────────────────────────────┐      ┌──────────────────────────┐
-      │  [Network Interface]         │      │  [Ingest Endpoint]           │      │  [WebSocket Client]      │
-      │         │                    │      │           │                  │      │           │              │
-      │      tshark process          │      │        Aggregator            │      │        UI Components     │
-      │         │                    │      │           │                  │      │           │              │
-      │      pyshark wrapper         │      │        Calculator            │      │        Charts & Tables   │
-      │         │                    │      │           │                  │      │                          │
-      │      WebSocket Client        │      │        Broadcaster           │      │                          │
-      └──────────────────────────────┘      └──────────────────────────────┘      └──────────────────────────┘
-```
-
-### Data Flow
+## Data Flow
 
 1.  **Packet Capture and Forwarding**:
     -   The **`network-capture-service`** listens on a network interface using `tshark`.
