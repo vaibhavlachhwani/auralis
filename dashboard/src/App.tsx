@@ -3,6 +3,7 @@ import MainLayout from "./layout/MainLayout";
 import { OverviewPage } from "./pages/OverviewPage";
 import { ConnectionsPage } from "./pages/ConnectionsPage";
 import { AboutPage } from "./pages/AboutPage";
+import { HistoryPage } from "./pages/HistoryPage";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <Route path="/" element={<OverviewPage />} />
         <Route path="/connections" element={<ConnectionsPage />} />
         <Route path="/about" element={<AboutPage />} />
-        {/* Other pages go here */}
+        <Route path="/history" element={<HistoryPage />} />
       </Route>
     </Routes>
   );

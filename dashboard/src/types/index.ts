@@ -32,3 +32,19 @@ export type ConnectionData = {
   bytes: number;
   speedMbps: number;
 };
+
+export type TrendData = {
+  time: string;
+  avgBandwidth: number;
+  maxBandwidth: number;
+};
+
+export type HistoryResponse = {
+  queryStart: string;
+  queryEnd: string;
+  trendData: TrendData[];
+  protocolDistribution: Record<string, number> | null;
+  topTalkers: IpTraffic[] | null;
+  topDestinations: IpTraffic[] | null;
+  topServices: PortTraffic[] | null;
+};
