@@ -6,8 +6,8 @@ import tech.vaibhavlachhwani.packetcollectorservice.dto.DashboardData;
 import tech.vaibhavlachhwani.packetcollectorservice.dto.HistoricalData;
 import tech.vaibhavlachhwani.packetcollectorservice.repository.MetricRepository;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -26,24 +26,24 @@ public class HistoryService {
 
         List<DashboardData.IpTraffic> topTalkers = metricRepository.findTopTalkersInRange(start, end, TOP_N_LIMIT)
                 .stream()
-                .map(row -> new DashboardData.IpTraffic((String) row[0], ((BigInteger) row[1]).longValue()))
+                .map(row -> new DashboardData.IpTraffic((String) row[0], ((BigDecimal) row[1]).longValue()))
                 .collect(Collectors.toList());
 
         List<DashboardData.IpTraffic> topDestinations = metricRepository.findTopDestinationsInRange(start, end, TOP_N_LIMIT)
                 .stream()
-                .map(row -> new DashboardData.IpTraffic((String) row[0], ((BigInteger) row[1]).longValue()))
+                .map(row -> new DashboardData.IpTraffic((String) row[0], ((BigDecimal) row[1]).longValue()))
                 .collect(Collectors.toList());
 
         List<DashboardData.PortTraffic> topServices = metricRepository.findTopServicesInRange(start, end, TOP_N_LIMIT)
                 .stream()
-                .map(row -> new DashboardData.PortTraffic((Integer) row[0], ((BigInteger) row[1]).longValue()))
+                .map(row -> new DashboardData.PortTraffic((Integer) row[0], ((BigDecimal) row[1]).longValue()))
                 .collect(Collectors.toList());
 
         Map<String, Long> protocolDistribution = metricRepository.findProtocolDistributionInRange(start, end, PROTOCOL_LIMIT)
                 .stream()
                 .collect(Collectors.toMap(
                         row -> (String) row[0],
-                        row -> ((BigInteger) row[1]).longValue()
+                        row -> ((BigDecimal) row[1]).longValue()
                 ));
 
         // --- 4. Assemble the Final DTO ---
@@ -78,7 +78,7 @@ public class HistoryService {
     private HistoricalData.TrendDataPoint mapToTrendDataPoint(Object[] row) {
         return HistoricalData.TrendDataPoint
                 .builder()
-                .time(((Timestamp) row[0]).toInstant())
+                .time(((Instant) row[0]))
                 .avgBandwidth((Double) row[1])
                 .maxBandwidth((Double) row[2])
                 .build();
