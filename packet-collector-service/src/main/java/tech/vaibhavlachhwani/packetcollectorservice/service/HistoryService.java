@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class HistoryService {
     private final MetricRepository metricRepository;
-    private static final int TOP_N_LIMIT = 10; // How many top talkers/services to query
+    private static final int TOP_N_LIMIT = 6; // How many top talkers/services to query
     private static final int PROTOCOL_LIMIT = 5;
 
     public HistoricalData getAggregatedMetrics(Instant start, Instant end) {
