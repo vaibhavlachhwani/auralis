@@ -44,21 +44,5 @@ export const useDashboardData = () => {
     };
   }, []);
 
-  const nullDashboardData = {
-    bandwidthMbps: 0.0,
-    packetsPerSecond: 0.0,
-    averagePacketSizeBytes: 0.0,
-    newConnectionsPerSecond: 0.0,
-    resetsPerSecond: 0.0,
-    protocolDistribution: {},
-    topTalkers: [],
-    topDestinations: [],
-    topServices: [],
-  };
-
-  if (JSON.stringify(dashboardData) === JSON.stringify(nullDashboardData)) {
-    setDashboardData(null);
-  }
-
   return { dashboardData, isConnected };
 };
