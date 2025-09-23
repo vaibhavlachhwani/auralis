@@ -1,4 +1,4 @@
-package tech.vaibhavlachhwani.packetcollectorservice.handlers;
+package tech.vaibhavlachhwani.packetcollectorservice.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
