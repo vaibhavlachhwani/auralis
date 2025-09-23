@@ -7,7 +7,6 @@ import tech.vaibhavlachhwani.packetcollectorservice.dto.HistoricalData;
 import tech.vaibhavlachhwani.packetcollectorservice.repository.MetricRepository;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;

@@ -12,9 +12,10 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Cable, ChartNoAxesCombined, Gauge, History, Info } from "lucide-react";
+import { Cable, Gauge, History, Info } from "lucide-react";
 import { VaibhavLogo } from "./logo/VaibhavLogo";
 import { NavLink } from "react-router-dom";
+import { AuralisLogo } from "./logo/AuralisLogo";
 
 export function AppSidebar() {
   return (
@@ -24,7 +25,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <div>
-                <ChartNoAxesCombined />
+                <AuralisLogo width={40} height={40} />
                 <span className="text-base font-semibold">Auralis</span>
               </div>
             </SidebarMenuButton>
