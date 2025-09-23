@@ -1,3 +1,4 @@
+import { API_URL } from "@/config";
 import type { HistoryResponse } from "@/types";
 import { useEffect, useState } from "react";
 
@@ -12,7 +13,7 @@ export const useHistoryData = (start: Date, end: Date) => {
       try {
         const response = await fetch(
           // The dates are converted to UTC before being sent to the backend.
-          `http://localhost:8080/api/history/metrics?start=${start.toISOString()}&end=${end.toISOString()}`
+          `${API_URL}/history/metrics?start=${start.toISOString()}&end=${end.toISOString()}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
