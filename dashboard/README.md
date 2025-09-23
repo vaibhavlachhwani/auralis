@@ -2,7 +2,7 @@
 
 ![Auralis Logo](./docs/auralis-logo.svg)
 
-This directory contains the source code for the Auralis dashboard, a modern and responsive web application built with React. It serves as the user interface for visualizing real-time network monitoring data provided by the Auralis backend services.
+This directory contains the source code for the Auralis dashboard, a modern and responsive web application built with React. It serves as the user interface for visualizing real-time and historical network monitoring data provided by the Auralis backend services.
 
 ## Features
 
@@ -11,6 +11,7 @@ This directory contains the source code for the Auralis dashboard, a modern and 
 -   **Detailed Connection Information**: Displays a comprehensive table of active network connections, allowing for easy inspection of traffic.
 -   **Responsive Design**: Built with Tailwind CSS, the dashboard is designed to work seamlessly across different screen sizes.
 -   **Theming**: Includes a theme toggle for switching between light and dark modes.
+-   **Historical Data Analysis Page**: A dedicated page (`/history`) allowing users to select a time range and view historical network metrics, such as bandwidth usage over time. This data is fetched from the `packet-collector-service` which retrieves it from TimescaleDB.
 
 ## Technologies Used
 
@@ -54,17 +55,21 @@ This directory contains the source code for the Auralis dashboard, a modern and 
 
 -   **`MainLayout.tsx`**: Provides the main layout structure for the application, including the sidebar and header.
 
--   **`OverviewPage.tsx`**: The main dashboard page that displays the key performance indicators (KPIs) and charts.
+-   **`OverviewPage.tsx`**: The main dashboard page that displays the key performance indicators (KPIs) and charts for real-time data.
 
 -   **`ConnectionsPage.tsx`**: Displays a detailed table of all active network connections.
 
+-   **`HistoryPage.tsx`**: A dedicated page for historical data analysis, allowing users to select time ranges and visualize past network metrics using charts like `BandwidthHistoryChart`.
+
 -   **`KpiCardsSection.tsx`**: A component that displays a series of `KpiCard` components, each showing a single metric (e.g., total bandwidth, packets per second).
 
--   **`ChartArea.tsx`**: A container for the various charts used to visualize the network data.
+-   **`ChartArea.tsx`**: A container for the various charts used to visualize the real-time network data.
+
+-   **`HistoryChartArea.tsx`**: A container specifically for charts displaying historical network data.
 
 -   **`DataTable.tsx`**: A reusable component for displaying tabular data, used here to show the list of connections.
 
--   **Custom Hooks**: The application uses custom hooks like `useDashboardData` and `useConnectionData` to encapsulate the logic for subscribing to WebSocket topics and managing the data.
+-   **Custom Hooks**: The application uses custom hooks like `useDashboardData` and `useConnectionData` for real-time data, and `useHistoryData` to fetch historical metrics from the backend.
 
 ## Project Structure
 
@@ -81,7 +86,7 @@ This directory contains the source code for the Auralis dashboard, a modern and 
 │   ├── hooks/              # Custom React hooks
 │   ├── layout/             # Layout components (e.g., MainLayout)
 │   ├── lib/                # Utility functions
-│   ├── pages/              # Top-level page components
+│   ├── pages/              # Top-level page components (including OverviewPage, ConnectionsPage, HistoryPage)
 │   ├── types/              # TypeScript type definitions
 │   └── utils/              # Utility functions
 ├── index.html              # Main HTML entry point

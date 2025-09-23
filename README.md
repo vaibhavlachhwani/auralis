@@ -11,6 +11,7 @@ Auralis is a powerful and intuitive web-based network monitoring tool designed t
 -   **Interactive Dashboard**: A modern, responsive web interface with interactive charts and tables for easy data exploration.
 -   **Protocol Distribution**: See a breakdown of network traffic by protocol (TCP, UDP, etc.).
 -   **Connection Details**: View a detailed list of active network connections with information like source/destination IPs, ports, and data transferred.
+-   **Historical Data Analysis**: Explore past network activity with a dedicated history page, allowing for trend analysis and retrospective investigation.
 
 ## Data Flow
 
@@ -19,15 +20,17 @@ Auralis is a powerful and intuitive web-based network monitoring tool designed t
     -   Raw packets are parsed by `pyshark` to extract key information (IPs, ports, protocols, etc.).
     -   This data is serialized to JSON and sent to the `packet-collector-service` via a WebSocket connection to the `/ingest` endpoint.
 
-2.  **Data Aggregation and Broadcasting**:
+2.  **Data Aggregation, Storage, and Broadcasting**:
     -   The **`packet-collector-service`** receives the JSON data and aggregates it in real-time.
     -   A scheduled service calculates metrics like bandwidth, top talkers, and protocol distribution.
+    -   **Historical Data Storage**: Aggregated metrics are also persisted to a **TimescaleDB** database for historical analysis.
     -   The aggregated metrics are then broadcasted as JSON payloads to all subscribed clients on a STOMP-enabled WebSocket topic (`/topic/metrics`).
 
-3.  **Real-Time Visualization**:
+3.  **Real-Time and Historical Visualization**:
     -   The **`dashboard`** establishes a WebSocket connection to the `packet-collector-service`.
     -   It subscribes to the STOMP topics to receive the aggregated metrics.
     -   The UI, built with React, dynamically updates to display the incoming data in charts and tables, providing a real-time view of the network activity.
+    -   The dashboard also fetches historical data from the `packet-collector-service` (which retrieves it from TimescaleDB) for its dedicated history analysis page.
 
 For a more detailed look at the internal architecture of each service, please refer to the `README.md` file in its respective directory.
 
@@ -46,6 +49,7 @@ For a more detailed look at the internal architecture of each service, please re
     -   Spring Boot 3
     -   Spring WebSocket (with STOMP)
     -   Maven for dependency management
+    -   **TimescaleDB**: For efficient storage and querying of time-series historical network data.
 
 -   **Packet Capture (`network-capture-service`)**:
     -   Python 3
@@ -63,20 +67,24 @@ To run Auralis, you will need the following installed on your system:
 -   **Python**: Version 3.x
 -   **Node.js**: For managing the `dashboard` dependencies and running the development server
 -   **`tshark`**: The command-line utility for `Wireshark`. The `network-capture-service` depends on it for packet capture. You can install it via your system's package manager (e.g., `sudo apt-get install tshark` on Debian/Ubuntu).
+-   **TimescaleDB**: A PostgreSQL-based time-series database. You will need a running instance of TimescaleDB (or PostgreSQL with the TimescaleDB extension) for historical data storage. Refer to the [TimescaleDB documentation](https://docs.timescale.com/timescaledb/latest/getting-started/) for installation instructions.
 
 ### Running the Application
 
 Follow these steps to get all the services up and running:
 
-1.  **Start the `packet-collector-service`**:
+1.  **Start TimescaleDB/PostgreSQL**:
+    Ensure your TimescaleDB instance is running and accessible. You will need to configure the `packet-collector-service` with the correct database connection details (e.g., in `application.properties`).
+
+2.  **Start the `packet-collector-service`**:
     Open a terminal, navigate to the `packet-collector-service` directory, and run the service using Maven:
     ```bash
     cd packet-collector-service
     mvn spring-boot:run
     ```
-    This will start the backend service on port `8080`.
+    This will start the backend service on port `8080` and connect to your TimescaleDB instance.
 
-2.  **Start the `network-capture-service`**:
+3.  **Start the `network-capture-service`**:
     In a new terminal, navigate to the `network-capture-service` directory. You may need to create a `requirements.txt` file and install the dependencies first.
     ```bash
     cd network-capture-service
@@ -88,7 +96,7 @@ Follow these steps to get all the services up and running:
     ```
     **Note**: Running this script with `sudo` is necessary as packet capture requires elevated privileges.
 
-3.  **Start the `dashboard`**:
+4.  **Start the `dashboard`**:
     Finally, in a third terminal, navigate to the `dashboard` directory, install the Node.js dependencies, and start the development server:
     ```bash
     cd dashboard
@@ -105,7 +113,7 @@ The repository is organized into three main directories, each containing one of 
 .
 ├── dashboard/                  # Contains the React-based frontend application
 ├── network-capture-service/    # The Python service for capturing and parsing network packets
-└── packet-collector-service/   # The Java/Spring Boot backend for data aggregation and broadcasting
+└── packet-collector-service/   # The Java/Spring Boot backend for data aggregation, broadcasting, and historical storage
 ```
 
 For more detailed information about each service, please refer to the `README.md` file within its respective directory.
