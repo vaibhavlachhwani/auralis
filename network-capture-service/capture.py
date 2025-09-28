@@ -4,6 +4,7 @@ import websockets
 import threading
 import queue
 import json
+import sys
 
 from config import INTERFACE, BPF_FILTER, WEBSOCKET_URI
 from packet_parser import parse_packet
@@ -19,10 +20,9 @@ def capture_thread(q, connection_event):
                 try:
                     parsed = parse_packet(packet=packet)
                     if parsed:
-                        try:
-                            q.put_nowait(parsed)
-                        except queue.Full:
-                            print("[Capture Thread] Queue full, discarding packet.", file=sys.stderr)
+                        # This is a blocking call. It will wait for a free spot in the queue
+                        # instead of discarding the packet. This applies backpressure.
+                        q.put(parsed)
                 except Exception as e:
                     print(f"[Capture Thread] Error parsing packet: {e}")
             # If not connected, the packet is simply ignored.
@@ -62,7 +62,7 @@ async def network_thread(q, connection_event):
             await asyncio.sleep(5)
 
 if __name__ == "__main__":
-    packet_queue = queue.Queue(maxsize=1)
+    packet_queue = queue.Queue(maxsize=100)
     connection_status_event = threading.Event()
     
     # The capture thread is a daemon so it exits when the main program exits
