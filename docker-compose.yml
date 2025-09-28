@@ -8,16 +8,15 @@ services:
     image: timescale/timescaledb-ha:pg17
     container_name: auralis-db
     environment:
-      # These credentials must match what the backend service expects.
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=passwdpg
-      - POSTGRES_DB=postgres
+      # Mimicking the successful docker run command
+      PGDATA: /pgdata
+      POSTGRES_PASSWORD: password
     ports:
       # Exposes the database on the host machine for direct access if needed.
       - "5432:5432"
     volumes:
       # Persists database data on the host machine in a local directory.
-      - ./timescaledb-data:/var/lib/postgresql/data
+      - ./timescaledb-data:/pgdata
     networks:
       - auralis-net
     healthcheck:
@@ -42,7 +41,7 @@ services:
       # Overrides the database URL to point to the 'db' service container.
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=passwdpg
+      - SPRING_DATASOURCE_PASSWORD=password
     ports:
       # Exposes the backend API and WebSocket on the host machine.
       - "8080:8080"
