@@ -5,7 +5,7 @@ services:
   # 1. TimescaleDB Database Service
   # This service runs a PostgreSQL database with the TimescaleDB extension.
   db:
-    image: timescale/timescaledb:2.11.2-pg14
+    image: timescale/timescaledb-ha:pg17
     container_name: auralis-db
     environment:
       # These credentials must match what the backend service expects.
