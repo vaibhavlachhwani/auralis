@@ -16,8 +16,8 @@ services:
       # Exposes the database on the host machine for direct access if needed.
       - "5432:5432"
     volumes:
-      # Persists database data on the host machine.
-      - timescaledb-data:/var/lib/postgresql/data
+      # Persists database data on the host machine in a local directory.
+      - ./timescaledb-data:/var/lib/postgresql/data
     networks:
       - auralis-net
     healthcheck:
@@ -68,7 +68,3 @@ services:
 networks:
   auralis-net:
     driver: bridge
-
-# Defines the named volume for persistent database storage.
-volumes:
-  timescaledb-data:
