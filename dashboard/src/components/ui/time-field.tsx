@@ -17,7 +17,7 @@ const segmentStyles = cva(
   }
 );
 
-function Segment({ segment, state }) {
+function Segment({ segment, state }: { segment: any; state: any }) {
   let ref = React.useRef(null);
   let { segmentProps } = useDateSegment(segment, state, ref);
 
@@ -36,7 +36,7 @@ const timeFieldStyles = cva(
   "inline-flex h-10 w-full flex-1 rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
 );
 
-export function TimeField(props) {
+export function TimeField(props: any) {
   let { locale } = useLocale();
   let state = useTimeFieldState({
     ...props,
