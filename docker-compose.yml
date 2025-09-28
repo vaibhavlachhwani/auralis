@@ -1,5 +1,3 @@
-version: '3.8'
-
 # This Docker Compose file orchestrates the Auralis application stack,
 # including the database, backend, and frontend services.
 
