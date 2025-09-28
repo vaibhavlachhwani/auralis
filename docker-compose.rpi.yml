@@ -10,4 +10,4 @@ services:
   db:
     image: timescale/timescaledb:latest-pg16
     environment:
-      TS_TUNE: "false"
+      - TS_TUNE=false
