@@ -9,14 +9,14 @@ services:
     container_name: auralis-db
     environment:
       # Mimicking the successful docker run command
-      PGDATA: /data/pgdata
+      PGDATA: /pgdata
       POSTGRES_PASSWORD: password
     ports:
       # Exposes the database on the host machine for direct access if needed.
       - "5432:5432"
     volumes:
       # Persists database data on the host machine in a local directory.
-      - ./timescaledb-data:/data
+      - ./timescaledb-data:/pgdata
     networks:
       - auralis-net
     healthcheck:

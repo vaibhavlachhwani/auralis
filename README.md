@@ -2,6 +2,12 @@
 
 ![Auralis Logo](./docs/auralis-logo.svg)
 
+## Demo
+
+https://github.com/VaibhavLachhwani/auralis/assets/47522163/23f1b3f2-6233-484c-8531-9a3f5b6b855f
+
+
+
 Auralis is a powerful and intuitive web-based network monitoring tool designed to provide real-time insights into your network traffic. It captures live data packets, processes them to extract key metrics, and presents them on a dynamic and user-friendly dashboard.
 
 ## Key Features
