@@ -4,7 +4,7 @@
 
 ## Demo
 
-./docs/auralis_demo_final.mp4
+![Auralis Demo](./docs/auralis_demo_final.mp4)
 
 
 
