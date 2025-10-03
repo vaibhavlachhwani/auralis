@@ -4,7 +4,7 @@
 
 ## Demo
 
-https://github.com/VaibhavLachhwani/auralis/assets/47522163/23f1b3f2-6233-484c-8531-9a3f5b6b855f
+./docs/auralis_demo_final.mp4
 
 
 
