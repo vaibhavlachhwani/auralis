@@ -4,7 +4,9 @@
 
 ## Demo
 
-![Auralis Demo](./docs/auralis_demo_final.mp4)
+<video width="320" height="240" controls>
+  <source src="./docs/auralis_demo_final.mp4" type="video/mp4">
+</video>
 
 
 
